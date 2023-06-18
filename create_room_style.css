@@ -237,8 +237,33 @@ body{
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-
-
+.btn-section{
+  margin-top:20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+.btn-section div{
+  margin: 2em;
+}
+.btn-section div input{
+  border-radius: 10px;
+  padding: 5px;
+  border: none;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  background: #4070f4;
+  transition: all 0.4s;
+}
 /* task table */
 table{
   width:100%;
