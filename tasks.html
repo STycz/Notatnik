@@ -4,14 +4,13 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Notes - stwórz pokój</title>
+    <title>Notes - zadania</title>
     <link rel="stylesheet" href="create_room_style.css" />
     <!-- Boxicons CSS -->
     <link flex href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-    <script src="create_room_js.js" defer></script>
   </head>
   <body>
-    <nav class="sidebar locked">
+    <nav class="sidebar hoverable">
       <div class="logo_items flex">
         <span class="logo_name">Notes</span>
         <i class="bx bx-lock-alt" id="lock-icon" title="Unlock Sidebar"></i>
@@ -104,7 +103,7 @@
             </table>
           </div>
           <div class="tbl-content">
-            <table cellpadding="0" cellspacing="0" border="0">
+            <table id="table" cellpadding="0" cellspacing="0" border="0">
               <tbody>
                 <tr>
                   <td width="2%">1</td>
@@ -117,116 +116,178 @@
                     </td>
                 </tr>
                 <tr>
-                  <td>2</td>
-                  <td>Zakupy</td>
-                  <td>5</td>
-                  <td>12/12/2022</td>
-                  <td>-1.36%</td>
-                  <td>-0.36%</td>
+                  <td width="2%">1</td>
+                  <td width="8%">Pranie</td>
+                  <td width="30%">$1.38 aaaaaaaaaa aaaaaaaaaaaaaa aaaaaaaaa aaaaa aa aaaa aaaaaa aaaaaa aaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+                  <td width="5%">12/12/2022</td>
+                  <td width="5%">-0.36%</td>
+                  <td width="5%">
+                    <input type="checkbox">
+                    </td>
                 </tr>
                 <tr>
-                  <td>3</td>
-                  <td>ODbiór ze szkoły</td>
-                  <td>3</td>
-                  <td>12/12/2022</td>
-                  <td>+1.36%</td>
-                  <td>-0.36%</td>
+                  <td width="2%">1</td>
+                  <td width="8%">Pranie</td>
+                  <td width="30%">$1.38 aaaaaaaaaa aaaaaaaaaaaaaa aaaaaaaaa aaaaa aa aaaa aaaaaa aaaaaa aaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+                  <td width="5%">12/12/2022</td>
+                  <td width="5%">-0.36%</td>
+                  <td width="5%">
+                    <input type="checkbox">
+                    </td>
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Zakupy</td>
-                    <td>5</td>
-                    <td>12/12/2022</td>
-                    <td>-1.36%</td>
-                    <td>-0.36%</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>ODbiór ze szkoły</td>
-                    <td>3</td>
-                    <td>12/12/2022</td>
-                    <td>+1.36%</td>
-                    <td>-0.36%</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Zakupy</td>
-                    <td>5</td>
-                    <td>12/12/2022</td>
-                    <td>-1.36%</td>
-                    <td>-0.36%</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>ODbiór ze szkoły</td>
-                    <td>3</td>
-                    <td>12/12/2022</td>
-                    <td>+1.36%</td>
-                    <td>-0.36%</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Zakupy</td>
-                    <td>5</td>
-                    <td>12/12/2022</td>
-                    <td>-1.36%</td>
-                    <td>-0.36%</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>ODbiór ze szkoły</td>
-                    <td>3</td>
-                    <td>12/12/2022</td>
-                    <td>+1.36%</td>
-                    <td>-0.36%</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Zakupy</td>
-                    <td>5</td>
-                    <td>12/12/2022</td>
-                    <td>-1.36%</td>
-                    <td>-0.36%</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>ODbiór ze szkoły</td>
-                    <td>3</td>
-                    <td>12/12/2022</td>
-                    <td>+1.36%</td>
-                    <td>-0.36%</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Zakupy</td>
-                    <td>5</td>
-                    <td>12/12/2022</td>
-                    <td>-1.36%</td>
-                    <td>-0.36%</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>ODbiór ze szkoły</td>
-                    <td>3</td>
-                    <td>12/12/2022</td>
-                    <td>+1.36%</td>
-                    <td>-0.36%</td>
-                  </tr>
               </tbody>
             </table>
           </div>
         </section>
         <div class="btn-section">
             <div>
-                <input type="submit" value="Dodaj zadanie">
+                <input type="submit" value="Dodaj zadanie" onclick="popupAdd();">
             </div>
             <div>
-                <input type="submit" value="Edytuj zadanie">
+                <input type="submit" value="Edytuj zadanie" onclick="popupEdit();">
             </div>
             <div>
                 <input type="submit" value="Usuń zadanie">
             </div>
         </div>
     </div>
+    <div id="popupAdd">
+      <div class="popup_container">
+        <div class="text">
+           Dodaj zadanie
+        </div>
+        <form action="#">
+           <div class="form-row">
+              <div class="input-data">
+                 <input type="text">
+                 <div class="underline"></div>
+                 <label for="">Nazwa</label>
+              </div>
+           </div>
+           <div class="form-row">
+              <div class="input-data">
+                 <input type="text">
+                 <div class="underline"></div>
+                 <label for="">Deadline</label>
+              </div>
+              <div class="input-data">
+                 <div class="underline"></div>
+                 <label for="">Priorytet</label>
+                 <select id="priority" name="priority">
+                  <option value=1 >1</option>
+                  <option value=2 >2</option>
+                  <option value=3 >3</option>
+                  <option value=4 >4</option>
+                  <option value=5 >5</option>
+                </select>
+              </div>
+           </div>
+           <div class="form-row">
+            <textarea>Some text...</textarea>
+           </div>
+           <div class="form-row">
+           <div class="input-data textarea">
+            <div class="form-row submit-btn">
+                <div class="input-data">
+                   <div class="inner"></div>
+                   <input type="submit" value="Akceptuj zmiany">
+                </div>
+                <div class="input-data">
+                  <div class="inner"></div>
+                  <input type="submit" value="Anuluj" onclick="popupAdd();">
+               </div>
+             </div>
+            </div>
+        </form>
+        </div>
+    </div>
+    <div id="popupEdit">
+      <div class="popup_container">
+        <div class="text">
+           Edytuj zadanie
+        </div>
+        <form action="#">
+           <div class="form-row">
+              <div class="input-data">
+                 <input type="text">
+                 <div class="underline"></div>
+                 <label for="">Nazwa</label>
+              </div>
+           </div>
+           <div class="form-row">
+              <div class="input-data">
+                 <input type="text">
+                 <div class="underline"></div>
+                 <label for="">Deadline</label>
+              </div>
+              <div class="input-data">
+                 <div class="underline"></div>
+                 <label for="">Priorytet</label>
+                 <select id="priority" name="priority">
+                  <option value=1 >1</option>
+                  <option value=2 >2</option>
+                  <option value=3 >3</option>
+                  <option value=4 >4</option>
+                  <option value=5 >5</option>
+                </select>
+              </div>
+           </div>
+           <div class="form-row">
+            <textarea>Some text...</textarea>
+           </div>
+           <div class="form-row">
+           <div class="input-data textarea">
+            <div class="form-row submit-btn">
+                <div class="input-data">
+                   <div class="inner"></div>
+                   <input type="submit" value="Akceptuj zmiany">
+                </div>
+                <div class="input-data">
+                  <div class="inner"></div>
+                  <input type="submit" value="Anuluj" onclick="popupEdit();">
+               </div>
+             </div>
+            </div>
+        </form>
+        </div>
+    </div>
+  
+    <script src="create_room_js.js" defer></script>
+    <script>
+      // start select row function 
+      function selectedRow(){
+                
+                var index,
+                    table = document.getElementById("table");
+            
+                for(var i = 0; i < table.rows.length; i++)
+                {
+                    table.rows[i].onclick = function()
+                    {
+                         // remove the background from the previous selected row
+                        if(typeof index !== "undefined"){
+                           table.rows[index].classList.toggle("selected");
+                        }
+                        // get the selected row index
+                        index = this.rowIndex;
+                        // add class selected to the row
+                        this.classList.toggle("selected");
+                     };
+                }
+                
+            }
+            selectedRow();
+    // end select row function 
+    // popup Edit button 
+    function popupEdit(){
+      var popup = document.getElementById("popupEdit");
+      popup.classList.toggle("active");
+    }
+   // popup Add button 
+   function popupAdd(){
+      var popupadd = document.getElementById("popupAdd");
+      popupadd.classList.toggle("active");
+    }
+    </script>
   </body>
 </html>
