@@ -38,10 +38,12 @@
                     <div class="inner"></div>
                     <input type="submit" value="Zaloguj">
                  </div>
-                 <div class="input-data">
-                    <div class="inner"></div>
-                    <input type="submit" value="Stwórz konto">
-                 </div>
+                 <div class="item">
+                     <a href="signup.php" class="ca">
+                     <i class="bx bx-log-out"></i>
+                     <span>Stwórz konto</span>
+                     </a>
+                  </div>
               </div>
         </form>
         </div>
