@@ -85,8 +85,8 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['mail'])){
 
         <div class="sidebar_profile flex">
           <div class="data_text">
-            <span class="name">Imie Nazwisko</span>
-            <span class="email">imienazwisko@gmail.com</span>
+            <span class="name"><?php echo $_SESSION['username'] ?> <br> </span>
+            <span class="email"><?php echo $_SESSION['mail'] ?></span>
           </div>
         </div>
       </div>
@@ -96,9 +96,45 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['mail'])){
     <div class="room-add">
         <i class="bx bx-plus-circle"></i>
         <div>
-            <input class="create-btn" type="submit" value="Stwórz pokój">
+            <input class="create-btn" type="submit" value="Stwórz pokój" onclick="popupCreateRoom();">
         </div>
     </div>
+    <div id="popupEdit">
+      <div class="popup_container">
+        <div class="text">
+           Nazwa pokoju
+        </div>
+        <form action="#">
+             <div class="form-row">
+              <div class="input-data">
+                  <input type="text" required>
+                  <div class="underline"></div>
+                  <label for="">Nazwa</label>
+               </div>
+             </div>
+           <div class="form-row">
+           <div class="input-data textarea">
+            <div class="form-row submit-btn">
+                <div class="input-data">
+                   <div class="inner"></div>
+                   <input type="submit" value="Stwórz pokój">
+                </div>
+                <div class="input-data">
+                  <div class="inner"></div>
+                  <input type="submit" value="Anuluj" onclick="popupCreateRoom();">
+               </div>
+             </div>
+            </div>
+        </form>
+        </div>
+    </div>
+    <script>
+    function popupCreateRoom(){
+      var popup = document.getElementById("popupEdit");
+      popup.classList.toggle("active");
+    }
+
+    </script>
   </body>
 </html>
 

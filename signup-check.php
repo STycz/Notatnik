@@ -35,7 +35,7 @@ if (isset($_POST['name']) && isset($_POST['nazwisko'])
         exit();
     }else{
         //hashowanie hasła
-        $pass = md5($pass);
+        
         
         $sql = "SELECT * FROM user WHERE mail='$uname' ";
 
