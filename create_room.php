@@ -1,8 +1,24 @@
 <?php
 session_start();
+include "db_conn.php";
+
 
 if (isset($_SESSION['user_id']) && isset($_SESSION['mail'])){
+  $pdo2 = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
 
+  // Prepare the SQL statement to check if the user has a room
+  $sql5 = "SELECT COUNT(*) as room_count FROM room WHERE user_id = :userId";
+  
+  // Bind the parameter
+  $statement = $pdo2->prepare($sql5);
+  $statement->bindParam(':userId', $_SESSION['user_id']);
+  
+  // Execute the SQL statement
+  $statement->execute();
+  
+  // Fetch the result
+  $result = $statement->fetch(PDO::FETCH_ASSOC);
+  $hasRoom = ($result['room_count'] > 0);
 ?>
 
 <!DOCTYPE html>
@@ -27,32 +43,23 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['mail'])){
 
       <div class="menu_container">
         <div class="menu_items">
-          <ul class="menu_item">
-            <div class="menu_title flex">
-              <span class="title">Pokoje</span>
-              <span class="line"></span>
-            </div>
-            <li class="item">
-              <a href="#" class="link flex">
-                <i class="bx bx-home-alt"></i>
-                <span>Pierwszy pokój</span>
-              </a>
-            </li>
-          </ul>
+          <?php include "rooms.php"; ?>
 
           <ul class="menu_item">
             <div class="menu_title flex">
               <span class="title">Narzędzia</span>
               <span class="line"></span>
             </div>
+            <?php 
+            if ($hasRoom) { ?> 
             <li class="item">
-              <a href="#" class="link flex">
+              <a href="tasks.php" class="link flex">
                 <i class="bx bx-task"></i>
                 <span>Zadania</span>
               </a>
             </li>
             <li class="item">
-                <a href="#" class="link flex">
+                <a href="notes_room.php" class="link flex">
                   <i class="bx bx-pen"></i>
                   <span>Notatki</span>
                 </a>
@@ -63,17 +70,12 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['mail'])){
                   <span>Budżet</span>
                 </a>
               </li>
+              <?php } ?>
           <ul class="menu_item">
             <div class="menu_title flex">
               <span class="title">Ustawienia</span>
               <span class="line"></span>
             </div>
-            <li class="item">
-              <a href="#" class="link flex">
-                <i class="bx bx-cog"></i>
-                <span>Ustawienia</span>
-              </a>
-            </li>
             <li class="item">
               <a href="logout.php" class="link flex">
                 <i class="bx bx-log-out"></i>
@@ -93,6 +95,8 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['mail'])){
     </nav>
 
     <!-- Navbar -->
+    <?php 
+    if (!$hasRoom) { ?> 
     <div class="room-add">
         <i class="bx bx-plus-circle"></i>
         <div>
@@ -104,10 +108,10 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['mail'])){
         <div class="text">
            Nazwa pokoju
         </div>
-        <form action="#">
+        <form action="add_room.php" method="post">
              <div class="form-row">
               <div class="input-data">
-                  <input type="text" required>
+                  <input type="text" name="nazwa_pokoju" required>
                   <div class="underline"></div>
                   <label for="">Nazwa</label>
                </div>
@@ -135,6 +139,9 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['mail'])){
     }
 
     </script>
+    
+    <?php } ?>
+    
   </body>
 </html>
 

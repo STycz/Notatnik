@@ -1,10 +1,31 @@
+<?php
+// Start the session
+session_start();
+include "db_conn.php";
+// Create a new PDO instance
+$pdo4 = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
+
+// Prepare the SQL statement to fetch notes for the current user's room
+$sql7 = "SELECT * FROM notes WHERE room_id IN (SELECT room_id FROM room WHERE user_id = :userId)";
+
+// Bind the parameter
+$statement = $pdo4->prepare($sql7);
+$statement->bindParam(':userId', $_SESSION['user_id']);
+
+// Execute the SQL statement
+$statement->execute();
+
+// Fetch all the rows as an associative array
+$notes = $statement->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Notes - Budżet</title>
+    <title>Notes - Notatki</title>
     <link rel="stylesheet" href="create_room_style.css" />
     <!-- Boxicons CSS -->
     <link flex href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
@@ -19,17 +40,8 @@
 
       <div class="menu_container">
         <div class="menu_items">
+         <?php include "rooms.php"; ?>
           <ul class="menu_item">
-            <div class="menu_title flex">
-              <span class="title">Pokoje</span>
-              <span class="line"></span>
-            </div>
-            <li class="item">
-              <a href="#" class="link flex">
-                <i class="bx bx-home-alt"></i>
-                <span>Pierwszy pokój</span>
-              </a>
-            </li>
           </ul>
 
           <ul class="menu_item">
@@ -38,19 +50,19 @@
               <span class="line"></span>
             </div>
             <li class="item">
-              <a href="#" class="link flex">
+              <a href="tasks.php" class="link flex">
                 <i class="bx bx-task"></i>
                 <span>Zadania</span>
               </a>
             </li>
             <li class="item">
-                <a href="#" class="link flex">
+                <a href="notes_room.php" class="link flex">
                   <i class="bx bx-pen"></i>
                   <span>Notatki</span>
                 </a>
               </li>
               <li class="item">
-                <a href="#" class="link flex">
+                <a href="budget.php" class="link flex">
                   <i class="bx bx-money"></i>
                   <span>Budżet</span>
                 </a>
@@ -61,13 +73,7 @@
               <span class="line"></span>
             </div>
             <li class="item">
-              <a href="#" class="link flex">
-                <i class="bx bx-cog"></i>
-                <span>Ustawienia</span>
-              </a>
-            </li>
-            <li class="item">
-              <a href="#" class="link flex">
+              <a href="logout.php" class="link flex">
                 <i class="bx bx-log-out"></i>
                 <span>Wyloguj</span>
               </a>
@@ -77,8 +83,8 @@
 
         <div class="sidebar_profile flex">
           <div class="data_text">
-            <span class="name">Imie Nazwisko</span>
-            <span class="email">imienazwisko@gmail.com</span>
+            <span class="name"><?php echo $_SESSION['username'] ?> <br> </span>
+            <span class="email"><?php echo $_SESSION['mail'] ?></span>
           </div>
         </div>
       </div>
@@ -89,46 +95,47 @@
         <span class="title">Notatki</span>
         <span class="line"></span>
         <div class="tbl-header">
-            <table cellpadding="0" cellspacing="0" border="0">
-              <thead>
+        <table cellpadding="0" cellspacing="0" border="0">
+            <thead>
                 <tr>
-                  <th width="8%">Nazwa</th>
-                  <th width="8%">Data</th>
-                  <th width="40%">Kwota</th>
+                    <th width="2%">Nr</th>
+                    <th width="8%">Nazwa</th>
+                    <th width="40%">Notatka</th>
                 </tr>
-              </thead>
-            </table>
-          </div>
-          <div class="tbl-content">
+            </thead>
+        </table>
+        </div>
+        <div class="tbl-content">
             <table id="table" cellpadding="0" cellspacing="0" border="0">
-              <tbody>
-                <tr>
-                  <td width="8%">1</td>
-                  <td width="8%">Pranieaaaaaaaaaaaaaaaaaaa aaaaaaaaa aaaaaaaaaa aaaaa</td>
-                  <td width="40%" right=0;>32</td>
-                </tr>
-              </tbody>
+                <tbody>
+                    <?php
+                    $rowNumber = 1;
+                    foreach ($notes as $note) {
+                    ?>
+                        <tr>
+                            <td width="2%"><?php echo $rowNumber++; ?></td>
+                            <td width="8%"><?php echo $note['title']; ?></td>
+                            <td width="40%"><?php echo $note['note']; ?></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
             </table>
-          </div>
-        </section>
-        <div id="budget_sum">
-            Saldo
         </div>
         <div class="btn-section">
             <div>
-                <input type="submit" value="Dodaj Kwotę" onclick="popupAdd();">
+                <input type="submit" value="Dodaj Notatke" onclick="popupAdd();">
             </div>
             <div>
-                <input type="submit" value="Edytuj Kwotę" onclick="popupEdit();">
+                <input type="submit" value="Edytuj Notatkę" onclick="popupEdit();">
             </div>
             <div>
-                <input type="submit" value="Usuń Kwotę">
+                <input type="submit" value="Usuń Notatkę">
             </div>
         </div>
         <div id="popupAdd">
             <div class="popup_container">
               <div class="text">
-                 Dodaj Kwotę
+                 Dodaj zadanie
               </div>
               <form action="#">
                  <div class="form-row">
@@ -139,44 +146,31 @@
                     </div>
                  </div>
                  <div class="form-row">
-                    <div class="input-data">
-                       <input type="text">
-                       <div class="underline"></div>
-                       <label for="">Data</label>
-                    </div>
+                  <textarea>Some text...</textarea>
                  </div>
                  <div class="form-row">
-                    <div class="input-data">
-                       <input type="number">
-                       <div class="underline"></div>
-                       <label for="">Kwota</label>
-                    </div>
-                 </div>
-                 <div class="form-row">
-                    <div class="input-data textarea">
-                     <div class="form-row submit-btn">
-                         <div class="input-data">
-                            <div class="inner"></div>
-                            <input type="submit" value="Dodaj Kwotę">
-                         </div>
-                         <div class="input-data">
-                           <div class="inner"></div>
-                           <input type="submit" value="Anuluj" onclick="popupAdd();">
-                        </div>
+                 <div class="input-data textarea">
+                  <div class="form-row submit-btn">
+                      <div class="input-data">
+                         <div class="inner"></div>
+                         <input type="submit" value="Dodaj notatkę">
                       </div>
+                      <div class="input-data">
+                        <div class="inner"></div>
+                        <input type="submit" value="Anuluj" onclick="popupAdd();">
                      </div>
+                   </div>
                   </div>
-                  
               </form>
               </div>
           </div>
           <div id="popupEdit">
             <div class="popup_container">
               <div class="text">
-                 Edytuj kwotę
+                 Edytuj zadanie
               </div>
               <form action="#">
-                <div class="form-row">
+                 <div class="form-row">
                     <div class="input-data">
                        <input type="text">
                        <div class="underline"></div>
@@ -187,15 +181,22 @@
                     <div class="input-data">
                        <input type="text">
                        <div class="underline"></div>
-                       <label for="">Data</label>
+                       <label for="">Deadline</label>
+                    </div>
+                    <div class="input-data">
+                       <div class="underline"></div>
+                       <label for="">Priorytet</label>
+                       <select id="priority" name="priority">
+                        <option value=1 >1</option>
+                        <option value=2 >2</option>
+                        <option value=3 >3</option>
+                        <option value=4 >4</option>
+                        <option value=5 >5</option>
+                      </select>
                     </div>
                  </div>
                  <div class="form-row">
-                    <div class="input-data">
-                       <input type="number">
-                       <div class="underline"></div>
-                       <label for="">Kwota</label>
-                    </div>
+                  <textarea>Some text...</textarea>
                  </div>
                  <div class="form-row">
                  <div class="input-data textarea">
@@ -250,15 +251,6 @@
       var popupadd = document.getElementById("popupAdd");
       popupadd.classList.toggle("active");
     }
-    // sum table
-
-    var tableSum = document.getElementById("table"), sumVal = 0;
-    for (let i = 0; i < table.rows.length; i++) {
-        sumVal = sumVal + parseFloat(table.rows[i].cells[2].innerHTML);
-        
-    }
-    document.getElementById("budget_sum").innerHTML = "Saldo: " + sumVal + "zł";
-    console.log(sumVal);
     </script>
   </body>
 </html>

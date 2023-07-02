@@ -1,3 +1,16 @@
+<?php
+session_start();
+include "db_conn.php";
+
+$pdo3 = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
+
+$sql6 = "SELECT * FROM task WHERE room_id IN (SELECT room_id FROM room WHERE user_id = :userId)";
+$statement = $pdo3->prepare($sql6);
+$statement->bindParam(':userId', $_SESSION['user_id']);
+$statement->execute();
+$tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -19,17 +32,8 @@
 
       <div class="menu_container">
         <div class="menu_items">
+         <?php include "rooms.php"; ?>
           <ul class="menu_item">
-            <div class="menu_title flex">
-              <span class="title">Pokoje</span>
-              <span class="line"></span>
-            </div>
-            <li class="item">
-              <a href="#" class="link flex">
-                <i class="bx bx-home-alt"></i>
-                <span>Pierwszy pokój</span>
-              </a>
-            </li>
           </ul>
 
           <ul class="menu_item">
@@ -38,19 +42,19 @@
               <span class="line"></span>
             </div>
             <li class="item">
-              <a href="#" class="link flex">
+              <a href="tasks.php" class="link flex">
                 <i class="bx bx-task"></i>
                 <span>Zadania</span>
               </a>
             </li>
             <li class="item">
-                <a href="#" class="link flex">
+                <a href="notes_room.php" class="link flex">
                   <i class="bx bx-pen"></i>
                   <span>Notatki</span>
                 </a>
               </li>
               <li class="item">
-                <a href="#" class="link flex">
+                <a href="budget.php" class="link flex">
                   <i class="bx bx-money"></i>
                   <span>Budżet</span>
                 </a>
@@ -61,13 +65,7 @@
               <span class="line"></span>
             </div>
             <li class="item">
-              <a href="#" class="link flex">
-                <i class="bx bx-cog"></i>
-                <span>Ustawienia</span>
-              </a>
-            </li>
-            <li class="item">
-              <a href="#" class="link flex">
+              <a href="logout.php" class="link flex">
                 <i class="bx bx-log-out"></i>
                 <span>Wyloguj</span>
               </a>
@@ -77,8 +75,8 @@
 
         <div class="sidebar_profile flex">
           <div class="data_text">
-            <span class="name">Imie Nazwisko</span>
-            <span class="email">imienazwisko@gmail.com</span>
+            <span class="name"><?php echo $_SESSION['username'] ?> <br> </span>
+            <span class="email"><?php echo $_SESSION['mail'] ?></span>
           </div>
         </div>
       </div>
@@ -103,42 +101,27 @@
             </table>
           </div>
           <div class="tbl-content">
-            <table id="table" cellpadding="0" cellspacing="0" border="0">
-              <tbody>
+    <table id="table" cellpadding="0" cellspacing="0" border="0">
+        <tbody>
+            <?php
+            $rowNumber = 1;
+            foreach ($tasks as $task) {
+                $isChecked = ($task['isdone'] == 1) ? 'checked' : '';
+            ?>
                 <tr>
-                  <td width="2%">1</td>
-                  <td width="8%">Pranie</td>
-                  <td width="30%">$1.38 aaaaaaaaaa aaaaaaaaaaaaaa aaaaaaaaa aaaaa aa aaaa aaaaaa aaaaaa aaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
-                  <td width="5%">12/12/2022</td>
-                  <td width="5%">-0.36%</td>
-                  <td width="5%">
-                    <input type="checkbox">
+                    <td width="2%"><?php echo $rowNumber++; ?></td>
+                    <td width="8%"><?php echo $task['name']; ?></td>
+                    <td width="30%"><?php echo $task['note']; ?></td>
+                    <td width="5%"><?php echo $task['deadline']; ?></td>
+                    <td width="5%"><?php echo $task['priority']; ?></td>
+                    <td width="5%">
+                        <input type="checkbox" <?php echo $isChecked; ?> disabled>
                     </td>
                 </tr>
-                <tr>
-                  <td width="2%">1</td>
-                  <td width="8%">Pranie</td>
-                  <td width="30%">$1.38 aaaaaaaaaa aaaaaaaaaaaaaa aaaaaaaaa aaaaa aa aaaa aaaaaa aaaaaa aaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
-                  <td width="5%">12/12/2022</td>
-                  <td width="5%">-0.36%</td>
-                  <td width="5%">
-                    <input type="checkbox">
-                    </td>
-                </tr>
-                <tr>
-                  <td width="2%">1</td>
-                  <td width="8%">Pranie</td>
-                  <td width="30%">$1.38 aaaaaaaaaa aaaaaaaaaaaaaa aaaaaaaaa aaaaa aa aaaa aaaaaa aaaaaa aaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
-                  <td width="5%">12/12/2022</td>
-                  <td width="5%">-0.36%</td>
-                  <td width="5%">
-                    <input type="checkbox">
-                    </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+            <?php } ?>
+        </tbody>
+    </table>
+</div>
         <div class="btn-section">
             <div>
                 <input type="submit" value="Dodaj zadanie" onclick="popupAdd();">
@@ -190,7 +173,7 @@
             <div class="form-row submit-btn">
                 <div class="input-data">
                    <div class="inner"></div>
-                   <input type="submit" value="Akceptuj zmiany">
+                   <input type="submit" value="Dodaj zadanie">
                 </div>
                 <div class="input-data">
                   <div class="inner"></div>
