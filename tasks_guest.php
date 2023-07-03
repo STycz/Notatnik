@@ -81,13 +81,7 @@
     <div class="btn-section">
       <div>
         <input type="submit" value="Dodaj zadanie" onclick="popupAdd();">
-      </div>
-      <div>
-        <input type="submit" value="Edytuj zadanie" onclick="popupEdit();">
-      </div>
-      <div>
-        <input type="submit" value="Usuń zadanie">
-      </div>
+    </div>
     </div>
   </div>
 
