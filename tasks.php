@@ -4,6 +4,16 @@ include "db_conn.php";
 
 $pdo3 = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
 
+// Check if the "Usuń zadanie" button is clicked
+if (isset($_POST['delete_task'])) {
+  $taskId = $_POST['delete_task'];
+
+  $sql = "DELETE FROM task WHERE task_id = :taskId";
+  $statement = $pdo3->prepare($sql);
+  $statement->bindParam(':taskId', $taskId);
+  $statement->execute();
+}
+
 $sql6 = "SELECT * FROM task WHERE room_id IN (SELECT room_id FROM room WHERE user_id = :userId)";
 $statement = $pdo3->prepare($sql6);
 $statement->bindParam(':userId', $_SESSION['user_id']);
@@ -132,7 +142,7 @@ $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
                 <input type="submit" value="Edytuj zadanie" onclick="popupEdit();">
             </div>
             <div>
-                <input type="submit" value="Usuń zadanie">
+            <button type="button" id="delete-task-btn">Usuń zadanie</button>
             </div>
         </div>
 </div>
@@ -337,6 +347,27 @@ function popupAdd() {
 
 // Call the selectedRow function to enable row selection
 selectedRow();
+document.getElementById("delete-task-btn").addEventListener("click", function() {
+  var selectedRow = document.querySelector(".selected");
+  if (selectedRow) {
+    var taskId = selectedRow.cells[1].textContent;
+
+    // Make an AJAX request to delete the task from the database
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "delete_task.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        // Handle the response here, if needed
+        console.log(xhr.responseText);
+
+        // Remove the selected row from the table
+        selectedRow.remove();
+      }
+    };
+    xhr.send("delete_task=" + encodeURIComponent(taskId));
+  }
+});
     </script>
   </body>
 </html>
