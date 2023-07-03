@@ -17,6 +17,31 @@ $statement->execute();
 
 // Fetch all the rows as an associative array
 $notes = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  // Check if the form was submitted from the edit popup
+  if (isset($_POST['edit_note'])) {
+    $noteId = $_POST['notes_id'];
+    $title = $_POST['title'];
+    $note = $_POST['note'];
+
+    // Prepare the SQL statement to update the note
+    $sqlUpdate = "UPDATE notes SET title = :title, note = :note WHERE notes_id = :noteId";
+
+    // Bind the parameters
+    $statementUpdate = $pdo4->prepare($sqlUpdate);
+    $statementUpdate->bindParam(':title', $title);
+    $statementUpdate->bindParam(':note', $note);
+    $statementUpdate->bindParam(':noteId', $noteId);
+
+    // Execute the SQL statement
+    $statementUpdate->execute();
+
+    // Redirect to the same page after updating the note
+    header("Location: notes_room.php");
+    exit();
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -98,7 +123,7 @@ $notes = $statement->fetchAll(PDO::FETCH_ASSOC);
         <table cellpadding="0" cellspacing="0" border="0">
             <thead>
                 <tr>
-                    <th width="2%">Nr</th>
+                    <th width="8%">Nr</th>
                     <th width="8%">Nazwa</th>
                     <th width="40%">Notatka</th>
                 </tr>
@@ -113,7 +138,7 @@ $notes = $statement->fetchAll(PDO::FETCH_ASSOC);
                     foreach ($notes as $note) {
                     ?>
                         <tr>
-                            <td width="2%"><?php echo $rowNumber++; ?></td>
+                            <td width="8%"><?php echo $note['notes_id']; ?></td>
                             <td width="8%"><?php echo $note['title']; ?></td>
                             <td width="40%"><?php echo $note['note']; ?></td>
                         </tr>
@@ -166,81 +191,72 @@ $notes = $statement->fetchAll(PDO::FETCH_ASSOC);
               </div>
           </div>
           <div id="popupEdit">
-            <div class="popup_container">
-              <div class="text">
-                 Edytuj zadanie
-              </div>
-              <form action="#">
-                 <div class="form-row">
-                    <div class="input-data">
-                       <input type="text">
-                       <div class="underline"></div>
-                       <label for="">Nazwa</label>
-                    </div>
-                 </div>
-                 <div class="form-row">
-                    <div class="input-data">
-                       <input type="text">
-                       <div class="underline"></div>
-                       <label for="">Deadline</label>
-                    </div>
-                    <div class="input-data">
-                       <div class="underline"></div>
-                       <label for="">Priorytet</label>
-                       <select id="priority" name="priority">
-                        <option value=1 >1</option>
-                        <option value=2 >2</option>
-                        <option value=3 >3</option>
-                        <option value=4 >4</option>
-                        <option value=5 >5</option>
-                      </select>
-                    </div>
-                 </div>
-                 <div class="form-row">
-                  <textarea>Some text...</textarea>
-                 </div>
-                 <div class="form-row">
-                 <div class="input-data textarea">
-                  <div class="form-row submit-btn">
-                      <div class="input-data">
-                         <div class="inner"></div>
-                         <input type="submit" value="Akceptuj zmiany">
-                      </div>
-                      <div class="input-data">
-                        <div class="inner"></div>
-                        <input type="submit" value="Anuluj" onclick="popupEdit();">
-                     </div>
-                   </div>
-                  </div>
-              </form>
-              </div>
+    <div class="popup_container">
+      <div class="text">
+        Edytuj notatkę
+      </div>
+      <form action="notes_room.php" method="POST">
+        <div class="form-row">
+          <div class="input-data">
+            <input type="hidden" name="notes_id" id="notes_id"> <!-- Add hidden input field for notes_id -->
+            <input type="text" name="title" id="edit_title">
+            <div class="underline"></div>
+            <label for="">Nazwa</label>
           </div>
+        </div>
+        <div class="form-row">
+          <textarea name="note" id="edit_note"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="input-data textarea">
+            <div class="form-row submit-btn">
+              <div class="input-data">
+                <div class="inner"></div>
+                <input type="submit" value="Akceptuj zmiany" name="edit_note">
+              </div>
+              <div class="input-data">
+                <div class="inner"></div>
+                <input type="submit" value="Anuluj" onclick="popupEdit();">
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
+  </div>
   
     <script src="create_room_js.js" defer></script>
     <script>
     // start select row function 
-      function selectedRow(){
-                
-                var index,
-                    table = document.getElementById("table");
-            
-                for(var i = 0; i < table.rows.length; i++)
-                {
-                    table.rows[i].onclick = function()
-                    {
-                         // remove the background from the previous selected row
-                        if(typeof index !== "undefined"){
-                           table.rows[index].classList.toggle("selected");
-                        }
-                        // get the selected row index
-                        index = this.rowIndex;
-                        // add class selected to the row
-                        this.classList.toggle("selected");
-                     };
-                }
-                
-            }
+    function fillForm(noteId, title, note) {
+      document.getElementById("notes_id").value = noteId;
+      document.getElementById("edit_title").value = title;
+      document.getElementById("edit_note").value = note;
+    }
+
+    // Attach click event to each row to fill the form
+    function selectedRow() {
+      var index,
+        table = document.getElementById("table");
+
+      for (var i = 0; i < table.rows.length; i++) {
+        table.rows[i].onclick = function () {
+          if (typeof index !== "undefined") {
+            table.rows[index].classList.toggle("selected");
+          }
+          index = this.rowIndex;
+          this.classList.toggle("selected");
+
+          // Get the data from the selected row
+          var noteId = this.cells[0].innerText;
+          var title = this.cells[1].innerText;
+          var note = this.cells[2].innerText;
+
+          // Fill the form with the data
+          fillForm(noteId, title, note);
+        };
+      }
+    }
             selectedRow();
          // popup Edit button 
     function popupEdit(){

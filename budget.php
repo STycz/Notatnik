@@ -4,13 +4,13 @@ session_start();
 include "db_conn.php";
 
 // Create a new PDO instance
-$pdo5 = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
+$pdo = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
 
 // Prepare the SQL statement to fetch budget rows for the current user's room
-$sql8 = "SELECT * FROM budget WHERE room_id IN (SELECT room_id FROM room WHERE user_id = :userId)";
+$sql = "SELECT * FROM budget WHERE room_id IN (SELECT room_id FROM room WHERE user_id = :userId)";
 
 // Bind the parameter
-$statement = $pdo5->prepare($sql8);
+$statement = $pdo->prepare($sql);
 $statement->bindParam(':userId', $_SESSION['user_id']);
 
 // Execute the SQL statement
@@ -18,6 +18,34 @@ $statement->execute();
 
 // Fetch all the rows as an associative array
 $budgetRows = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  // Check if the form was submitted from the edit popup
+  if (isset($_POST['edit_budget'])) {
+    $budgetId = $_POST['budget_id'];
+    $name = $_POST['name'];
+    $value = $_POST['value'];
+    $date = $_POST['date'];
+
+    // Prepare the SQL statement to update the budget
+    $sqlUpdate = "UPDATE budget SET name = :name, value = :value, date = :date WHERE budget_id = :budgetId";
+
+    // Bind the parameters
+    $statementUpdate = $pdo->prepare($sqlUpdate);
+    $statementUpdate->bindParam(':name', $name);
+    $statementUpdate->bindParam(':value', $value);
+    $statementUpdate->bindParam(':date', $date);
+    $statementUpdate->bindParam(':budgetId', $budgetId);
+
+    // Execute the SQL statement
+    $statementUpdate->execute();
+
+    
+    // Redirect to the same page after updating the budget
+    header("Location: budget_php.php");
+    exit();
+}
+}
 ?>
 
 <!DOCTYPE html>
@@ -99,6 +127,7 @@ $budgetRows = $statement->fetchAll(PDO::FETCH_ASSOC);
     <table cellpadding="0" cellspacing="0" border="0">
         <thead>
             <tr>
+                <th width="4%">ID</th>
                 <th width="8%">Nazwa</th>
                 <th width="8%">Data</th>
                 <th width="40%">Kwota</th>
@@ -110,12 +139,14 @@ $budgetRows = $statement->fetchAll(PDO::FETCH_ASSOC);
         <table id="table" cellpadding="0" cellspacing="0" border="0">
             <tbody>
                 <?php
+                $rowNumber = 1;
                 foreach ($budgetRows as $row) {
                 ?>
                     <tr>
-                        <td width="8%"><?php echo $row['name']; ?></td>
-                        <td width="8%"><?php echo $row['date']; ?></td>
-                        <td width="40%"><?php echo $row['value']; ?></td>
+                      <td width="4%"><?php echo $row['budget_id']; ?></td>
+                      <td width="8%"><?php echo $row['name']; ?></td>
+                      <td width="8%"><?php echo $row['date']; ?></td>
+                      <td width="40%"><?php echo $row['value']; ?></td>
                     </tr>
                 <?php } ?>
             </tbody>
@@ -185,24 +216,25 @@ $budgetRows = $statement->fetchAll(PDO::FETCH_ASSOC);
               <div class="text">
                  Edytuj kwotę
               </div>
-              <form action="#">
+              <form action="budget.php" method="POST">
                 <div class="form-row">
                     <div class="input-data">
-                       <input type="text">
+                       <input type="hidden" name="budget_id" id="budget_id">
+                       <input type="text" name="name" id="edit_name">
                        <div class="underline"></div>
                        <label for="">Nazwa</label>
                     </div>
                  </div>
                  <div class="form-row">
                     <div class="input-data">
-                       <input type="text">
+                       <input type="text" name="date" id="edit_date">
                        <div class="underline"></div>
                        <label for="">Data</label>
                     </div>
                  </div>
                  <div class="form-row">
                     <div class="input-data">
-                       <input type="number">
+                       <input type="number" name="value" id="edit_value">
                        <div class="underline"></div>
                        <label for="">Kwota</label>
                     </div>
@@ -212,7 +244,7 @@ $budgetRows = $statement->fetchAll(PDO::FETCH_ASSOC);
                   <div class="form-row submit-btn">
                       <div class="input-data">
                          <div class="inner"></div>
-                         <input type="submit" value="Akceptuj zmiany">
+                         <input type="submit" value="Akceptuj zmiany" name="edit_budget">
                       </div>
                       <div class="input-data">
                         <div class="inner"></div>
@@ -228,27 +260,38 @@ $budgetRows = $statement->fetchAll(PDO::FETCH_ASSOC);
     <script src="create_room_js.js" defer></script>
     <script>
     // start select row function 
-      function selectedRow(){
-                
-                var index,
-                    table = document.getElementById("table");
-            
-                for(var i = 0; i < table.rows.length; i++)
-                {
-                    table.rows[i].onclick = function()
-                    {
-                         // remove the background from the previous selected row
-                        if(typeof index !== "undefined"){
-                           table.rows[index].classList.toggle("selected");
-                        }
-                        // get the selected row index
-                        index = this.rowIndex;
-                        // add class selected to the row
-                        this.classList.toggle("selected");
-                     };
-                }
-                
-            }
+    function fillForm(budgetId, name, date, value) {
+      document.getElementById("budget_id").value = budgetId;
+      document.getElementById("edit_name").value = name;
+      document.getElementById("edit_date").value = date;
+      document.getElementById("edit_value").value = value;
+    }
+    
+    function selectedRow() {
+      var index,
+        table = document.getElementById("table");
+
+      for (var i = 0; i < table.rows.length; i++) {
+        table.rows[i].onclick = function () {
+          // remove the background from the previously selected row
+          if (typeof index !== "undefined") {
+            table.rows[index].classList.toggle("selected");
+          }
+          // get the selected row index
+          index = this.rowIndex;
+          // add class selected to the row
+          this.classList.toggle("selected");
+
+          var budgetId = this.cells[0].innerText;
+          var name = this.cells[1].innerText;
+          var date = this.cells[2].innerText;
+          var value = this.cells[3].innerText;
+
+          // Fill the form with the data
+          fillForm(budgetId, name, date, value);
+        };
+      }
+    }
             selectedRow();
          // popup Edit button 
     function popupEdit(){
