@@ -139,17 +139,17 @@ $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
         <div class="text">
            Dodaj zadanie
         </div>
-        <form action="#">
+        <form action="add_task.php" method="POST">
            <div class="form-row">
               <div class="input-data">
-                 <input type="text">
+                 <input type="text" name="nazwa">
                  <div class="underline"></div>
                  <label for="">Nazwa</label>
               </div>
            </div>
            <div class="form-row">
               <div class="input-data">
-                 <input type="text">
+                 <input type="text" name="deadline">
                  <div class="underline"></div>
                  <label for="">Deadline</label>
               </div>
@@ -166,9 +166,9 @@ $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
               </div>
            </div>
            <div class="form-row">
-            <textarea>Some text...</textarea>
+            <textarea name="notatka"></textarea>
            </div>
-           <div class="form-row">
+           <div class="form-row submit-btn">
            <div class="input-data textarea">
             <div class="form-row submit-btn">
                 <div class="input-data">
@@ -177,7 +177,7 @@ $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
                 </div>
                 <div class="input-data">
                   <div class="inner"></div>
-                  <input type="submit" value="Anuluj" onclick="popupAdd();">
+                  <input type="button" value="Anuluj" onclick="popupAdd();">
                </div>
              </div>
             </div>

@@ -141,43 +141,42 @@ $budgetRows = $statement->fetchAll(PDO::FETCH_ASSOC);
               <div class="text">
                  Dodaj Kwotę
               </div>
-              <form action="#">
-                 <div class="form-row">
+              <form action="add_budget.php" method="POST">
+                <div class="form-row">
                     <div class="input-data">
-                       <input type="text">
-                       <div class="underline"></div>
-                       <label for="">Nazwa</label>
+                        <input type="text" name="name">
+                        <div class="underline"></div>
+                        <label for="">Nazwa</label>
                     </div>
-                 </div>
-                 <div class="form-row">
+                </div>
+                <div class="form-row">
                     <div class="input-data">
-                       <input type="text">
-                       <div class="underline"></div>
-                       <label for="">Data</label>
+                        <input type="text" name="date">
+                        <div class="underline"></div>
+                        <label for="">Data</label>
                     </div>
-                 </div>
-                 <div class="form-row">
+                </div>
+                <div class="form-row">
                     <div class="input-data">
-                       <input type="number">
-                       <div class="underline"></div>
-                       <label for="">Kwota</label>
+                        <input type="number" name="value">
+                        <div class="underline"></div>
+                        <label for="">Kwota</label>
                     </div>
-                 </div>
-                 <div class="form-row">
+                </div>
+                <div class="form-row">
                     <div class="input-data textarea">
-                     <div class="form-row submit-btn">
-                         <div class="input-data">
-                            <div class="inner"></div>
-                            <input type="submit" value="Dodaj Kwotę">
-                         </div>
-                         <div class="input-data">
-                           <div class="inner"></div>
-                           <input type="submit" value="Anuluj" onclick="popupAdd();">
+                        <div class="form-row submit-btn">
+                            <div class="input-data">
+                                <div class="inner"></div>
+                                <input type="submit" value="Dodaj Kwotę">
+                            </div>
+                            <div class="input-data">
+                                <div class="inner"></div>
+                                <input type="submit" value="Anuluj" onclick="popupAdd();">
+                            </div>
                         </div>
-                      </div>
-                     </div>
-                  </div>
-                  
+                    </div>
+                </div>
               </form>
               </div>
           </div>

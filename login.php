@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "db_conn.php";
+$pdo7 = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
 if (isset($_POST['uname']) && isset($_POST['password'])){
     
     function validate($data){
@@ -29,6 +30,19 @@ if (isset($_POST['uname']) && isset($_POST['password'])){
                 $_SESSION['mail'] = $row['mail'];
                 $_SESSION['username'] = $row['username'];
                 $_SESSION['user_id'] = $row['user_id'];
+                $user_id = $row['user_id']; // Assuming you have a variable to store the user's ID after login
+                $query = "SELECT room_id FROM room WHERE user_id = :user_id";
+                $statement = $pdo7->prepare($query);
+                $statement->bindParam(':user_id', $user_id);
+                $statement->execute();
+
+                $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if ($result) {
+        // Store the room_id in the session variable
+        $_SESSION['room_id'] = $result['room_id'];
+    }
+
                 header("Location: create_room.php");
                 exit();
             }else{
