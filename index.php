@@ -44,6 +44,12 @@
                      <span>Stwórz konto</span>
                      </a>
                   </div>
+                  <div class="item">
+                     <a href="tasks_guest.php" class="ca">
+                     <i class="bx bx-log-out"></i>
+                     <span>Gość</span>
+                     </a>
+                  </div>
               </div>
         </form>
         </div>

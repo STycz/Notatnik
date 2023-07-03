@@ -1,25 +1,3 @@
-<?php
-session_start();
-include "db_conn.php";
-
-$pdo3 = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
-
-// Check if the "Usuń zadanie" button is clicked
-if (isset($_POST['delete_task'])) {
-  $taskId = $_POST['delete_task'];
-
-  $sql = "DELETE FROM task WHERE task_id = :taskId";
-  $statement = $pdo3->prepare($sql);
-  $statement->bindParam(':taskId', $taskId);
-  $statement->execute();
-}
-
-$sql6 = "SELECT * FROM task WHERE room_id IN (SELECT room_id FROM room WHERE user_id = :userId)";
-$statement = $pdo3->prepare($sql6);
-$statement->bindParam(':userId', $_SESSION['user_id']);
-$statement->execute();
-$tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +5,7 @@ $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Notes - zadania</title>
+    <title>Notes - Gość</title>
     <link rel="stylesheet" href="create_room_style.css" />
     <!-- Boxicons CSS -->
     <link flex href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
@@ -85,8 +63,7 @@ $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="sidebar_profile flex">
           <div class="data_text">
-            <span class="name"><?php echo $_SESSION['username'] ?> <br> </span>
-            <span class="email"><?php echo $_SESSION['mail'] ?></span>
+            <span class="name">Gość</span>
           </div>
         </div>
       </div>
@@ -114,23 +91,18 @@ $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
     <div class="tbl-content">
         <table id="table" cellpadding="0" cellspacing="0" border="0">
             <tbody>
-            <?php
-            $rowNumber = 1;
-            foreach ($tasks as $task) {
-                $isChecked = ($task['isdone'] == 1) ? 'checked' : '';
-                ?>
                 <tr>
-                    <td width="2%"><?php echo $rowNumber++; ?></td>
-                    <td width="5%"><?php echo $task['task_id']; ?></td> <!-- Display task_id column -->
-                    <td width="8%"><?php echo $task['name']; ?></td>
-                    <td width="30%"><?php echo $task['note']; ?></td>
-                    <td width="5%"><?php echo $task['deadline']; ?></td>
-                    <td width="5%"><?php echo $task['priority']; ?></td>
+                    <td width="2%"></td>
+                    <td width="5%"></td>
+                    <td width="8%"></td>
+                    <td width="30%"></td>
+                    <td width="5%"></td>
+                    <td width="5%"></td>
                     <td width="5%">
-                        <input type="checkbox" <?php echo $isChecked; ?> disabled>
+                        <input type="checkbox">
                     </td>
                 </tr>
-            <?php } ?>
+            
             </tbody>
         </table>
     </div>        
@@ -142,12 +114,12 @@ $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
                 <input type="submit" value="Edytuj zadanie" onclick="popupEdit();">
             </div>
             <div>
-            <button type="button" id="delete-task-btn">Usuń zadanie</button>
+                <input type="submit" value="Usuń zadanie">
             </div>
         </div>
+    </div>
 </div>
 
-    </div>
     <div id="popupAdd">
       <div class="popup_container">
         <div class="text">
@@ -204,29 +176,21 @@ $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
     <div class="text">
       Edytuj zadanie
     </div>
-    <form action="update_task.php" method="POST">
-        <?php
-        // Retrieve the task details
-        $taskId = $task['task_id'];
-        $name = $task['name'];
-        $note = $task['note'];
-        $deadline = $task['deadline'];
-        $priority = $task['priority'];
-        ?>
+    <form action="" method="POST">
         <!-- Hidden input field for task_id -->
-        <input name="task_id" value="<?php echo $taskId; ?>">
+        <input name="task_id" value="">
 
         
         <div class="form-row">
             <div class="input-data">
-                <input type="text" name="nazwa" value="<?php echo $name; ?>">
+                <input type="text" name="nazwa" value="">
                 <div class="underline"></div>
                 <label for="">Nazwa</label>
             </div>
         </div>
         <div class="form-row">
             <div class="input-data">
-                <input type="text" name="deadline" value="<?php echo $deadline; ?>">
+                <input type="text" name="deadline" value="">
                 <div class="underline"></div>
                 <label for="">Deadline</label>
             </div>
@@ -234,16 +198,16 @@ $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
                 <div class="underline"></div>
                 <label for="">Priorytet</label>
                 <select id="priority" name="priority">
-                    <option value="1" <?php if ($priority == 1) echo 'selected'; ?>>1</option>
-                    <option value="2" <?php if ($priority == 2) echo 'selected'; ?>>2</option>
-                    <option value="3" <?php if ($priority == 3) echo 'selected'; ?>>3</option>
-                    <option value="4" <?php if ($priority == 4) echo 'selected'; ?>>4</option>
-                    <option value="5" <?php if ($priority == 5) echo 'selected'; ?>>5</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
                 </select>
             </div>
         </div>
         <div class="form-row">
-            <textarea name="notatka"><?php echo $note; ?></textarea>
+            <textarea name="notatka">Notatka</textarea>
         </div>
         <div class="form-row">
             <div class="input-data textarea">
@@ -347,27 +311,6 @@ function popupAdd() {
 
 // Call the selectedRow function to enable row selection
 selectedRow();
-document.getElementById("delete-task-btn").addEventListener("click", function() {
-  var selectedRow = document.querySelector(".selected");
-  if (selectedRow) {
-    var taskId = selectedRow.cells[1].textContent;
-
-    // Make an AJAX request to delete the task from the database
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "delete_task.php", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        // Handle the response here, if needed
-        console.log(xhr.responseText);
-
-        // Remove the selected row from the table
-        selectedRow.remove();
-      }
-    };
-    xhr.send("delete_task=" + encodeURIComponent(taskId));
-  }
-});
     </script>
   </body>
 </html>
