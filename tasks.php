@@ -142,7 +142,7 @@ $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
                 <input type="submit" value="Edytuj zadanie" onclick="popupEdit();">
             </div>
             <div>
-            <button type="button" id="delete-task-btn">Usuń zadanie</button>
+            <input type="submit" value="Usuń zadanie" id="delete-task-btn">
             </div>
         </div>
 </div>
@@ -320,7 +320,7 @@ function popupEdit() {
     // Add event listener to the form's submit button
     var submitButton = popupEditForm.querySelector('input[type="submit"]');
     submitButton.addEventListener("click", function (event) {
-      event.preventDefault(); // Prevent form submission
+      
 
       // Get the form data
       var formData = new FormData(popupEditForm);

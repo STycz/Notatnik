@@ -154,8 +154,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="submit" value="Edytuj Notatkę" onclick="popupEdit();">
             </div>
             <div>
-                <input type="submit" value="Usuń Notatkę">
-            </div>
+            <input type="submit" value="Usuń notatkę" id="delete-note-btn">
+            </div> 
         </div>
         <div id="popupAdd">
             <div class="popup_container">
@@ -227,6 +227,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   
     <script src="create_room_js.js" defer></script>
     <script>
+      document.getElementById("delete-note-btn").addEventListener("click", function() {
+  var selectedRow = document.querySelector(".selected");
+  if (selectedRow) {
+    var noteId = selectedRow.cells[0].textContent;
+
+    // Make an AJAX request to delete the task from the database
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "delete_note.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        // Handle the response here, if needed
+        console.log(xhr.responseText);
+
+        // Remove the selected row from the table
+        selectedRow.remove();
+      }
+    };
+    xhr.send("delete_note=" + encodeURIComponent(noteId));
+  }
+});
     // start select row function 
     function fillForm(noteId, title, note) {
       document.getElementById("notes_id").value = noteId;

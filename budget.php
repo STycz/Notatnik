@@ -164,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="submit" value="Edytuj Kwotę" onclick="popupEdit();">
             </div>
             <div>
-                <input type="submit" value="Usuń Kwotę">
+                <input type="submit" value="Usuń kwotę" id="delete-budget-btn">
             </div>
         </div>
         <div id="popupAdd">
@@ -259,6 +259,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   
     <script src="create_room_js.js" defer></script>
     <script>
+    document.getElementById("delete-budget-btn").addEventListener("click", function() {
+  var selectedRow = document.querySelector(".selected");
+  if (selectedRow) {
+    var budgetId = selectedRow.cells[0].textContent;
+
+    // Make an AJAX request to delete the task from the database
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "delete_budget.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        // Handle the response here, if needed
+        console.log(xhr.responseText);
+
+        // Remove the selected row from the table
+        selectedRow.remove();
+      }
+    };
+    xhr.send("delete_budget=" + encodeURIComponent(budgetId));
+  }
+});
     // start select row function 
     function fillForm(budgetId, name, date, value) {
       document.getElementById("budget_id").value = budgetId;
@@ -307,7 +328,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     var tableSum = document.getElementById("table"), sumVal = 0;
     for (let i = 0; i < table.rows.length; i++) {
-        sumVal = sumVal + parseFloat(table.rows[i].cells[2].innerHTML);
+        sumVal = sumVal + parseFloat(table.rows[i].cells[3].innerHTML);
         
     }
     document.getElementById("budget_sum").innerHTML = "Saldo: " + sumVal + "zł";
