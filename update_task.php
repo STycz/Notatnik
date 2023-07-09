@@ -3,7 +3,6 @@
 session_start();
 include "db_conn.php";
 
-
 // Check if the request is a POST request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve the form data
@@ -23,6 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($stmt->affected_rows > 0) {
             // Update successful
             $_SESSION['success_message'] = 'Task updated successfully.';
+            header('Location: tasks.php');
+            exit();
             
         } else {
             // No rows were affected
@@ -36,7 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Close the statement
     $stmt->close();
     // Redirect to tasks.php 
-    header(target, true, 302);
+    header('Location: tasks.php');
     exit();
+    
 }
 ?>

@@ -1,3 +1,15 @@
+<?php
+session_start();
+include "db_conn.php";
+
+$pdo = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
+// Fetch users from the database
+$sql = "SELECT * FROM user WHERE isadmin = 1";
+$statement = $pdo->prepare($sql);
+$statement->execute();
+$users = $statement->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -26,19 +38,19 @@
               <span class="line"></span>
             </div>
             <li class="item">
-              <a href="#" class="link flex">
+              <a href="admin_panel_users.php" class="link flex">
                 <i class="bx bx-universal-access"></i>
                 <span>Użytkownicy</span>
               </a>
             </li>
             <li class="item">
-                <a href="#" class="link flex">
+                <a href="admin_panel_admins.php" class="link flex">
                   <i class="bx bx-user-pin"></i>
                   <span>Admini</span>
                 </a>
               </li>
               <li class="item">
-                <a href="#" class="link flex">
+                <a href="admin_panel_rooms.php" class="link flex">
                   <i class="bx bx-task"></i>
                   <span>Pokoje</span>
                 </a>
@@ -55,7 +67,7 @@
               </a>
             </li>
             <li class="item">
-              <a href="#" class="link flex">
+              <a href="logout.php" class="link flex">
                 <i class="bx bx-log-out"></i>
                 <span>Wyloguj</span>
               </a>
@@ -66,8 +78,8 @@
         <div class="sidebar_profile flex">
           <div class="data_text">
             <span class="admin">Admin</span><br>
-            <span class="name">Imie Nazwisko</span>
-            <span class="email">imienazwisko@gmail.com</span>
+            <span class="name"><?php echo $_SESSION['username'] ?> <br></span>
+            <span class="email"><?php echo $_SESSION['mail'] ?></span>
           </div>
         </div>
       </div>
@@ -93,13 +105,25 @@
           <div class="tbl-content">
             <table id="table" cellpadding="0" cellspacing="0" border="0">
               <tbody>
-                <tr>
-                  <td width="2%">1</td>
-                  <td width="5%">Aleksandra</td>
-                  <td width="6%">Brzęczyszczykiewicz</td>
-                  <td width="8%">Kowalski_Jan</td>
-                  <td width="8%">jankowalski@mail.com</td>
-                </tr>
+                <?php
+                foreach ($users as $index => $user) {
+                  $userId = $user['user_id'];
+                  $name = $user['name'];
+                  $surname = $user['surname'];
+                  $username = $user['username'];
+                  $mail = $user['mail'];
+                  $password = $user['password'];
+                  ?>
+                  <tr>
+                    <td width="2%"><?php echo $userId; ?></td>
+                    <td width="5%"><?php echo $name; ?></td>
+                    <td width="6%"><?php echo $surname; ?></td>
+                    <td width="8%"><?php echo $username; ?></td>
+                    <td width="8%"><?php echo $mail; ?></td>
+                  </tr>
+                <?php
+                }
+                ?>
               </tbody>
             </table>
           </div>
