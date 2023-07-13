@@ -140,7 +140,7 @@ $users = $statement->fetchAll(PDO::FETCH_ASSOC);
                 <input type="submit" value="Edytuj użytkownika" onclick="popupEdit();">
             </div>
             <div>
-                <input type="submit" value="Usuń użytkownika">
+                <input type="submit" value="Usuń użytkownika" id="delete-user-btn">
             </div>
         </div>
     </div>
@@ -276,6 +276,28 @@ $users = $statement->fetchAll(PDO::FETCH_ASSOC);
                 
             }
             selectedRow();
+
+      document.getElementById("delete-user-btn").addEventListener("click", function() {
+        var selectedRow = document.querySelector(".selected");
+        if (selectedRow) {
+          var userId = selectedRow.cells[0].textContent;
+
+          // Make an AJAX request to delete the task from the database
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", "delete_user.php", true);
+          xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+              // Handle the response here, if needed
+              console.log(xhr.responseText);
+
+              // Remove the selected row from the table
+              selectedRow.remove();
+            }
+          };
+          xhr.send("delete_user=" + encodeURIComponent(userId));
+        }
+      });
     // end select row function 
     // popup Edit button 
     function popupEdit(){

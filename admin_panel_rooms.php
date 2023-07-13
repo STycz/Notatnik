@@ -145,7 +145,7 @@ $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
                 <input type="submit" value="Edytuj pokój" onclick="popupEdit();">
             </div>
             <div>
-                <input type="submit" value="Usuń pokój">
+                <input type="submit" value="Usuń pokój" id="delete-room-btn">
             </div>
         </div>
     </div>
@@ -204,6 +204,28 @@ $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
                 
             }
             selectedRow();
+      
+      document.getElementById("delete-room-btn").addEventListener("click", function() {
+        var selectedRow = document.querySelector(".selected");
+        if (selectedRow) {
+          var roomId = selectedRow.cells[0].textContent;
+
+          // Make an AJAX request to delete the task from the database
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", "delete_room.php", true);
+          xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+              // Handle the response here, if needed
+              console.log(xhr.responseText);
+
+              // Remove the selected row from the table
+              selectedRow.remove();
+            }
+          };
+          xhr.send("delete_room=" + encodeURIComponent(roomId));
+        }
+      });
     // end select row function 
     // popup Edit button 
     function popupEdit(){
