@@ -144,39 +144,7 @@
   </div>
 
   <script>
-    // Function to add a new task to the table
-  function addTask() {
-  // Get form values
-  const form = document.getElementById("popupAdd");
-  const name = form.querySelector('input[name="nazwa"]').value;
-  const deadline = form.querySelector('input[name="deadline"]').value;
-  const priority = form.querySelector('select[name="priority"]').value;
-  const note = form.querySelector('textarea[name="notatka"]').value;
-
-  // Create a new row in the table
-  const table = document.getElementById("tableBody");
-  const newRow = table.insertRow();
-
-  // Insert data into the new row
-  const cell1 = newRow.insertCell();
-  const cell2 = newRow.insertCell();
-  const cell3 = newRow.insertCell();
-  const cell4 = newRow.insertCell();
-  const cell5 = newRow.insertCell();
-  const cell6 = newRow.insertCell();
-  cell1.textContent = ""; // Nr
-  cell2.textContent = name;
-  cell3.textContent = note;
-  cell4.textContent = deadline;
-  cell5.textContent = priority;
-  cell6.innerHTML = '<input type="checkbox">'; // Zrobione
-
-  // Clear form values
-  form.reset();
-
-  // Close the popup
-  popupAdd();
-  }
+  
 
     // Function to show the "Add" popup
     function popupAdd() {
@@ -189,6 +157,55 @@
       const popupEdit = document.getElementById("popupEdit");
       popupEdit.classList.toggle("active");
     }
+    function addTask() {
+    var tableBody = document.getElementById("tableBody");
+
+    var nazwa = document.querySelector("input[name='nazwa']").value;
+    var deadline = document.querySelector("input[name='deadline']").value;
+    var priorytet = document.querySelector("select[name='priority']").value;
+    var notatka = document.querySelector("textarea[name='notatka']").value;
+
+    var nr = tableBody.rows.length + 1;
+
+    var newRow = document.createElement("tr");
+    var nrCell = document.createElement("td");
+    var nazwaCell = document.createElement("td");
+    var notatkaCell = document.createElement("td");
+    var deadlineCell = document.createElement("td");
+    var priorytetCell = document.createElement("td");
+    var zrobioneCell = document.createElement("td");
+
+    nrCell.style.width = "2%";
+    nazwaCell.style.width = "8%";
+    notatkaCell.style.width = "30%";
+    deadlineCell.style.width = "5%";
+    priorytetCell.style.width = "5%";
+    zrobioneCell.style.width = "5%";
+
+    nrCell.innerHTML = nr;
+    nazwaCell.innerHTML = nazwa;
+    notatkaCell.innerHTML = notatka;
+    deadlineCell.innerHTML = deadline;
+    priorytetCell.innerHTML = priorytet;
+
+    var checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.name = 'zrobione';
+    zrobioneCell.appendChild(checkbox);
+
+    newRow.appendChild(nrCell);
+    newRow.appendChild(nazwaCell);
+    newRow.appendChild(notatkaCell);
+    newRow.appendChild(deadlineCell);
+    newRow.appendChild(priorytetCell);
+    newRow.appendChild(zrobioneCell);
+
+    tableBody.appendChild(newRow);
+
+    document.querySelector('#popupAdd form').reset();
+    popupAdd()
+}
+    
   </script>
 </body>
 </html>

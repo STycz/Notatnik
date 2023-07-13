@@ -434,6 +434,9 @@ form .form-row .textarea{
 .textarea textarea:valid ~ .underline:before{
   transform: scale(1);
 }
+.form-row{
+  margin-top: 30px;
+}
 .submit-btn .input-data{
   border-radius: 10px;
   overflow: hidden;
