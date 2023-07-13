@@ -3,11 +3,11 @@ session_start();
 include "db_conn.php";
 
 $pdo = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
-// Fetch users from the database
+// Fetch rooms from the database
 $sql = "SELECT * FROM room";
 $statement = $pdo->prepare($sql);
 $statement->execute();
-$users = $statement->fetchAll(PDO::FETCH_ASSOC);
+$rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -106,14 +106,36 @@ $users = $statement->fetchAll(PDO::FETCH_ASSOC);
           <div class="tbl-content">
             <table id="table" cellpadding="0" cellspacing="0" border="0">
               <tbody>
+              <?php
+              // Iterate over the rooms and generate table rows
+              foreach ($rooms as $index => $room) {
+                $roomId = $room['room_id'];
+                $roomName = $room['room_name'];
+                $userId = $room['user_id'];
+
+                // Fetch user details for the associated user_id
+                $userSql = "SELECT * FROM user WHERE user_id = :userId";
+                $userStatement = $pdo->prepare($userSql);
+                $userStatement->bindParam(':userId', $userId, PDO::PARAM_INT);
+                $userStatement->execute();
+                $user = $userStatement->fetch(PDO::FETCH_ASSOC);
+
+                $userName = $user['name'];
+                $userSurname = $user['surname'];
+                $userMail = $user['mail'];
+                $userUsername = $user['username'];
+              ?>
                 <tr>
-                  <td width="2%">1</td>
-                  <td width="10%">nauka</td>
-                  <td width="6%">Aleksandra</td>
-                  <td width="8%">Brzęczyszczykiewicz</td>
-                  <td width="8%">jankowalski@mail.com</td>
-                  <td width="8%">Kowalski_Jan</td>
+                  <td width="2%"><?php echo $roomId; ?></td>
+                  <td width="10%"><?php echo $roomName; ?></td>
+                  <td width="6%"><?php echo $userName; ?></td>
+                  <td width="8%"><?php echo $userSurname; ?></td>
+                  <td width="8%"><?php echo $userMail; ?></td>
+                  <td width="8%"><?php echo $userUsername; ?></td>
                 </tr>
+              <?php
+              }
+              ?>
               </tbody>
             </table>
           </div>

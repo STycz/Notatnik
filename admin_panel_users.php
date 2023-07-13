@@ -149,36 +149,36 @@ $users = $statement->fetchAll(PDO::FETCH_ASSOC);
         <div class="text">
            Dodaj użytkownika
         </div>
-        <form action="#">
+        <form action="add_user_check.php" method="post">
             <div class="form-row">
                 <div class="input-data">
-                   <input type="text" required>
+                   <input type="text" name="name" required>
                    <div class="underline"></div>
                    <label for="">Imię</label>
                 </div>
                 <div class="input-data">
-                   <input type="text" required>
+                   <input type="text" name="nazwisko" required>
                    <div class="underline"></div>
                    <label for="">Nazwisko</label>
                 </div>
              </div>
              <div class="form-row">
                 <div class="input-data">
-                   <input type="text" required>
+                  <input type="text" name="uname" required>
                    <div class="underline"></div>
                    <label for="">Adres Email</label>
                 </div>
                 <div class="input-data">
-                   <input type="text" required>
+                   <input type="text" name="username" required>
                    <div class="underline"></div>
                    <label for="">Nazwa użytkownika</label>
                 </div>
              </div>
              <div class="form-row">
               <div class="input-data">
-                  <input type="password" required>
-                  <div class="underline"></div>
-                  <label for="">Hasło</label>
+                 <input type="password" name="password" required>
+                 <div class="underline"></div>
+                 <label for="">Hasło</label>
                </div>
              </div>
            <div class="form-row">
