@@ -3,6 +3,11 @@ session_start();
 include "db_conn.php";
                       
 $pdo = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
+
+if (!isset($_SESSION['username']) || $_SESSION['isadmin'] != 1) {
+  header("Location: login.php"); // Redirect to the login page
+  exit();
+}
 // Fetch users from the database
 $sql = "SELECT * FROM user";
 $statement = $pdo->prepare($sql);
@@ -200,82 +205,99 @@ $users = $statement->fetchAll(PDO::FETCH_ASSOC);
     <div id="popupEdit">
       <div class="popup_container">
         <div class="text">
-           Edytuj użytkownika
+          Edytuj użytkownika
         </div>
-        <form action="#">
-            <div class="form-row">
-                <div class="input-data">
-                   <input type="text" required>
-                   <div class="underline"></div>
-                   <label for="">Imię</label>
-                </div>
-                <div class="input-data">
-                   <input type="text" required>
-                   <div class="underline"></div>
-                   <label for="">Nazwisko</label>
-                </div>
-             </div>
-             <div class="form-row">
-                <div class="input-data">
-                   <input type="text" required>
-                   <div class="underline"></div>
-                   <label for="">Adres Email</label>
-                </div>
-                <div class="input-data">
-                   <input type="text" required>
-                   <div class="underline"></div>
-                   <label for="">Nazwa użytkownika</label>
-                </div>
-             </div>
-             <div class="form-row">
-              <div class="input-data">
-                  <input type="password" required>
-                  <div class="underline"></div>
-                  <label for="">Hasło</label>
-               </div>
-             </div>
-           <div class="form-row">
-           <div class="input-data textarea">
-            <div class="form-row submit-btn">
-                <div class="input-data">
-                   <div class="inner"></div>
-                   <input type="submit" value="Akceptuj zmiany">
-                </div>
-                <div class="input-data">
-                  <div class="inner"></div>
-                  <input type="submit" value="Anuluj" onclick="popupEdit();">
-               </div>
-             </div>
-            </div>
-        </form>
+        <form action="update_user.php" method="POST" id="editForm">
+  <div class="form-row">
+    <div class="input-data">
+      <input type="text" name="name" id="editName" required>
+      <div class="underline"></div>
+      <label for="">Imię</label>
+    </div>
+    <div class="input-data">
+      <input type="text" name="surname" id="editSurname" required>
+      <div class="underline"></div>
+      <label for="">Nazwisko</label>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="input-data">
+      <input type="text" name="mail" id="editMail" required>
+      <div class="underline"></div>
+      <label for="">Adres Email</label>
+    </div>
+    <div class="input-data">
+      <input type="text" name="username" id="editUsername" required>
+      <div class="underline"></div>
+      <label for="">Nazwa użytkownika</label>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="input-data">
+      <input type="password" name="password" id="editPassword" required>
+      <div class="underline"></div>
+      <label for="">Hasło</label>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="input-data textarea">
+      <div class="form-row submit-btn">
+        <div class="input-data">
+          <div class="inner"></div>
+          <input type="submit" value="Akceptuj zmiany">
         </div>
+        <div class="input-data">
+          <div class="inner"></div>
+          <input type="button" value="Anuluj" onclick="popupEdit();">
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Hidden input field to store the user ID -->
+  <input type="hidden" name="user_id" id="editUserId" value="">
+</form>
+      </div>
     </div>
   
     <script src="create_room_js.js" defer></script>
     <script>
       // start select row function 
-      function selectedRow(){
-                
-                var index,
-                    table = document.getElementById("table");
-            
-                for(var i = 0; i < table.rows.length; i++)
-                {
-                    table.rows[i].onclick = function()
-                    {
-                         // remove the background from the previous selected row
-                        if(typeof index !== "undefined"){
-                           table.rows[index].classList.toggle("selected");
-                        }
-                        // get the selected row index
-                        index = this.rowIndex;
-                        // add class selected to the row
-                        this.classList.toggle("selected");
-                     };
-                }
-                
+      function selectedRow() {
+        var index,
+          table = document.getElementById("table");
+
+        for (var i = 0; i < table.rows.length; i++) {
+          table.rows[i].onclick = function () {
+            // remove the background from the previous selected row
+            if (typeof index !== "undefined") {
+              table.rows[index].classList.toggle("selected");
             }
-            selectedRow();
+            // get the selected row index
+            index = this.rowIndex;
+            // add class selected to the row
+            this.classList.toggle("selected");
+
+            // Populate the form fields with data from the selected row
+            var userId = this.cells[0].textContent;
+            var name = this.cells[1].textContent;
+            var surname = this.cells[2].textContent;
+            var mail = this.cells[4].textContent;
+            var username = this.cells[3].textContent;
+            var password = this.cells[5].textContent;
+
+            document.getElementById("edit-user-form").setAttribute("data-user-id", userId);
+            document.getElementById("name-input").value = name;
+            document.getElementById("surname-input").value = surname;
+            document.getElementById("mail-input").value = mail;
+            document.getElementById("username-input").value = username;
+            document.getElementById("password-input").value = password;
+          };
+        }
+      }
+            
+      selectedRow();
+
+      
 
       document.getElementById("delete-user-btn").addEventListener("click", function() {
         var selectedRow = document.querySelector(".selected");
@@ -300,9 +322,28 @@ $users = $statement->fetchAll(PDO::FETCH_ASSOC);
       });
     // end select row function 
     // popup Edit button 
-    function popupEdit(){
+    function popupEdit() {
       var popup = document.getElementById("popupEdit");
       popup.classList.toggle("active");
+
+      // Fill the form with data from the selected row
+      var selectedRow = document.querySelector(".selected");
+      if (selectedRow) {
+        var userId = selectedRow.cells[0].textContent;
+        var name = selectedRow.cells[1].textContent;
+        var surname = selectedRow.cells[2].textContent;
+        var username = selectedRow.cells[3].textContent;
+        var mail = selectedRow.cells[4].textContent;
+        var password = selectedRow.cells[5].textContent;
+
+        // Set the form input values
+        document.getElementById("editUserId").value = userId;
+        document.getElementById("editName").value = name;
+        document.getElementById("editSurname").value = surname;
+        document.getElementById("editMail").value = mail;
+        document.getElementById("editUsername").value = username;
+        document.getElementById("editPassword").value = password;
+      }
     }
    // popup Add button 
    function popupAdd(){

@@ -3,6 +3,11 @@ session_start();
 include "db_conn.php";
 
 $pdo = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
+
+if (!isset($_SESSION['username']) || $_SESSION['isadmin'] != 1) {
+  header("Location: login.php"); // Redirect to the login page
+  exit();
+}
 // Fetch rooms from the database
 $sql = "SELECT * FROM room";
 $statement = $pdo->prepare($sql);
@@ -154,27 +159,28 @@ $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
         <div class="text">
            Edytuj pokój
         </div>
-        <form action="#">
-             <div class="form-row">
-              <div class="input-data">
-                  <input type="text" required>
-                  <div class="underline"></div>
-                  <label for="">Nazwa</label>
-               </div>
-             </div>
-           <div class="form-row">
-           <div class="input-data textarea">
-            <div class="form-row submit-btn">
+        <form action="#" id="edit-room-form">
+          <div class="form-row">
+            <div class="input-data">
+              <input type="text" id="edit-room-name" required>
+              <div class="underline"></div>
+              <label for="">Nazwa</label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="input-data textarea">
+              <div class="form-row submit-btn">
                 <div class="input-data">
-                   <div class="inner"></div>
-                   <input type="submit" value="Akceptuj zmiany">
+                  <div class="inner"></div>
+                  <input type="button" value="Akceptuj zmiany" onclick="updateRoom()">
                 </div>
                 <div class="input-data">
                   <div class="inner"></div>
-                  <input type="submit" value="Anuluj" onclick="popupEdit();">
-               </div>
-             </div>
+                  <input type="button" value="Anuluj" onclick="popupEdit()">
+                </div>
+              </div>
             </div>
+          </div>
         </form>
         </div>
     </div>
@@ -182,28 +188,49 @@ $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
     <script src="create_room_js.js" defer></script>
     <script>
       // start select row function 
-      function selectedRow(){
-                
-                var index,
-                    table = document.getElementById("table");
-            
-                for(var i = 0; i < table.rows.length; i++)
-                {
-                    table.rows[i].onclick = function()
-                    {
-                         // remove the background from the previous selected row
-                        if(typeof index !== "undefined"){
-                           table.rows[index].classList.toggle("selected");
-                        }
-                        // get the selected row index
-                        index = this.rowIndex;
-                        // add class selected to the row
-                        this.classList.toggle("selected");
-                     };
-                }
-                
+      function selectedRow() {
+        var index,
+          table = document.getElementById("table");
+        var editRoomName = document.getElementById("edit-room-name");
+
+        for (var i = 0; i < table.rows.length; i++) {
+          table.rows[i].onclick = function () {
+            if (typeof index !== "undefined") {
+              table.rows[index].classList.toggle("selected");
             }
-            selectedRow();
+            index = this.rowIndex;
+            this.classList.toggle("selected");
+
+            // Populate form with selected row data
+            editRoomName.value = this.cells[1].textContent;
+          };
+        }
+      }
+      selectedRow();
+
+      function updateRoom() {
+        var selectedRow = document.querySelector(".selected");
+        if (selectedRow) {
+          var roomId = selectedRow.cells[0].textContent;
+          var editRoomName = document.getElementById("edit-room-name").value; // Retrieve the value from the form input
+          var formData = new FormData();
+          formData.append("room_id", roomId);
+          formData.append("room_name", editRoomName); // Include the room name in the formData
+
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", "update_room.php", true);
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+              // Handle the response here, if needed
+              console.log(xhr.responseText);
+
+              // Refresh the page or update the modified row
+              window.location.reload();
+            }
+          };
+          xhr.send(formData);
+        }
+      }
       
       document.getElementById("delete-room-btn").addEventListener("click", function() {
         var selectedRow = document.querySelector(".selected");
