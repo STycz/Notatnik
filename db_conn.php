@@ -1,6 +1,6 @@
 <?php
 
-$sname = "localhost";
+$sname = "https://www.manticore.uni.lodz.pl";
 $unmae = "2023_szymont";
 $password = "392782";
 
