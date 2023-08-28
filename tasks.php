@@ -4,6 +4,11 @@ include "db_conn.php";
 
 $pdo3 = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
 
+if (!isset($_SESSION['username'])) {
+  header("Location: login.php"); // Redirect to the login page
+  exit();
+}
+
 // Check if the "Usuń zadanie" button is clicked
 if (isset($_POST['delete_task'])) {
   $taskId = $_POST['delete_task'];

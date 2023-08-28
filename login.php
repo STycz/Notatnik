@@ -32,6 +32,7 @@ if (isset($_POST['uname']) && isset($_POST['password'])){
                 $_SESSION['user_id'] = $row['user_id'];
                 $user_id = $row['user_id']; // Assuming you have a variable to store the user's ID after login
                 if ($row['isadmin'] == 1) {
+                    $_SESSION['isadmin'] = 1;
                     header("Location: admin_panel_users.php");
                     exit();
                 } else {

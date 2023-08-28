@@ -6,6 +6,11 @@ include "db_conn.php";
 // Create a new PDO instance
 $pdo = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
 
+if (!isset($_SESSION['username'])) {
+  header("Location: login.php"); // Redirect to the login page
+  exit();
+}
+
 // Prepare the SQL statement to fetch budget rows for the current user's room
 $sql = "SELECT * FROM budget WHERE room_id IN (SELECT room_id FROM room WHERE user_id = :userId)";
 

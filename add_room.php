@@ -17,7 +17,7 @@ $statement->bindParam(':userId', $_SESSION['user_id']);
 
 // Execute the SQL statement
 if ($statement->execute()) {
-    echo "Room added successfully.";
+    header('Location: create_room.php');
 } else {
     echo "Error adding room: " . $statement->errorInfo()[2];
 }
