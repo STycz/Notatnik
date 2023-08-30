@@ -65,7 +65,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['mail'])){
                 </a>
               </li>
               <li class="item">
-                <a href="#" class="link flex">
+                <a href="budget.php" class="link flex">
                   <i class="bx bx-money"></i>
                   <span>Budżet</span>
                 </a>
