@@ -1,12 +1,12 @@
 <?php
 // Start the session
 
-include "db_conn.php";
+include "config/config.php";
 
 // Assuming you have established a connection to your MySQL database
 
 // Create a new PDO instance
-$pdo1 = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
+$pdo1 = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
 
 // Prepare the SQL statement
 $sql4 = "SELECT * FROM room WHERE user_id = :userId";

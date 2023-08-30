@@ -1,3 +1,10 @@
+<?php
+if (!file_exists("config/config.php")) 
+{
+   header("Location: setup.php");
+}
+?>
+
 <!doctype html>
 <html lang="en">
   <head>

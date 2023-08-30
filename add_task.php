@@ -1,8 +1,8 @@
 <?php
 session_start();
-include "db_conn.php";
+include "config/config.php";
 // Create a new PDO instance
-$pdo6 = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
+$pdo6 = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
 
 // Prepare the SQL statement to insert a new task into the task table
 $sql9 = "INSERT INTO task (name, note, priority, deadline, user_id, room_id)

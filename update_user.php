@@ -1,7 +1,7 @@
 <?php
 session_start();
-include "db_conn.php";
-$pdo = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
+include "config/config.php";
+$pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Get the user ID from the form

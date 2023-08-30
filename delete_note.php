@@ -1,8 +1,8 @@
 <?php
 session_start();
-include "db_conn.php";
+include "config/config.php";
 
-$pdo = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
+$pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
 
 if (isset($_POST['delete_note'])) {
   $noteId = $_POST['delete_note'];

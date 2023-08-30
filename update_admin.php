@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "db_conn.php";
+include "config/config.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get the form data
@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Update the admin's data in the database
     $sql = "UPDATE user SET name = '$name', surname = '$surname', mail = '$mail', username = '$username', password = '$password' WHERE user_id = $adminId";
-    $result = mysqli_query($conn, $sql);
+    $result = mysqli_query($link, $sql);
 
     if ($result) {
         // Data updated successfully
@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     } else {
         // Error updating data
-        echo "Error updating admin data: " . mysqli_error($conn);
+        echo "Error updating admin data: " . mysqli_error($link);
     }
 }
 ?>

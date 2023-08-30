@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "db_conn.php";
+include "config/config.php";
 if (isset($_POST['name']) && isset($_POST['nazwisko']) 
     && isset($_POST['uname']) && isset($_POST['username']) && isset($_POST['password'])){
     
@@ -34,19 +34,19 @@ if (isset($_POST['name']) && isset($_POST['nazwisko'])
         header("Location: admin_panel_admins.php?error=Nazwa użytkownika jest wymagana&$user_data");
         exit();
     }else{
-        //hashowanie hasła
+        $pass = md5($pass);
         
         
         $sql = "SELECT * FROM user WHERE mail='$uname' ";
 
-        $result = mysqli_query($conn, $sql);
+        $result = mysqli_query($link, $sql);
 
         if (mysqli_num_rows($result) > 0){
             header("Location: admin_panel_admins.php?error=Nazwa użytkownika jest już zajęta$user_data");
             exit();
         }else{
             $sql2 = "INSERT INTO user(isadmin, username, mail, password, name, surname) VALUES('1', '$username', '$uname', '$pass', '$name', '$nazwisko')";
-            $result2 = mysqli_query($conn, $sql2);
+            $result2 = mysqli_query($link, $sql2);
             if($result2){
                 header("Location: admin_panel_admins.php?success=Twoje konto zostało pomyślnie utworzone");
                 exit();

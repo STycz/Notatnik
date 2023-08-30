@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "db_conn.php";
+include "config/config.php";
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve the form values
@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insert the data into the notes table
 
     try {
-        $pdo8 = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
+        $pdo8 = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
         $pdo8->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $query2 = "INSERT INTO notes (title, note, room_id) VALUES (:title, :note, :room_id)";

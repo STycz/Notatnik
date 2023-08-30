@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "db_conn.php";
+include "config/config.php";
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve the form values
@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $room_id = $_SESSION['room_id'];
 
     try {
-        $pdo9 = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
+        $pdo9 = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
         $pdo9->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $query3 = "INSERT INTO budget (name, value, date, room_id) VALUES (:name, :value, :date, :room_id)";

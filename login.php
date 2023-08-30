@@ -1,7 +1,7 @@
 <?php
 session_start();
-include "db_conn.php";
-$pdo7 = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
+include "config/config.php";
+$pdo7 = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
 if (isset($_POST['uname']) && isset($_POST['password'])){
     
     function validate($data){
@@ -20,9 +20,12 @@ if (isset($_POST['uname']) && isset($_POST['password'])){
         header("Location: index.php?error=Password is required");
         exit();
     }else{
+        
+        $pass=md5($pass);
+        
         $sql = "SELECT * FROM user WHERE mail='$uname' AND password='$pass'";
 
-        $result = mysqli_query($conn, $sql);
+        $result = mysqli_query($link, $sql);
 
         if (mysqli_num_rows($result) === 1){
             $row = mysqli_fetch_assoc($result);

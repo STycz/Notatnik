@@ -1,9 +1,9 @@
 <?php
 // Start the session
 session_start();
-include "db_conn.php";
+include "config/config.php";
 // Create a new PDO instance
-$pdo4 = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
+$pdo4 = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
 
 if (!isset($_SESSION['username'])) {
   header("Location: login.php"); // Redirect to the login page

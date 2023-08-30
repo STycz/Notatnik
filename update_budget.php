@@ -1,10 +1,10 @@
 <?php
 // Start the session
 session_start();
-include "db_conn.php";
+include "config/config.php";
 
 // Create a new PDO instance
-$pdo = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
+$pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

@@ -1,7 +1,7 @@
 <?php
 // update_task.php
 session_start();
-include "db_conn.php";
+include "config/config.php";
 
 // Check if the request is a POST request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Prepare and execute the UPDATE query
     $sql = "UPDATE task SET name=?, note=?, deadline=?, priority=? WHERE task_id=?";
-    $stmt = $conn->prepare($sql);
+    $stmt = $link->prepare($sql);
     $stmt->bind_param('ssssi', $nazwa, $note, $deadline, $priority, $taskId);
 
     if ($stmt->execute()) {

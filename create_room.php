@@ -1,10 +1,10 @@
 <?php
 session_start();
-include "db_conn.php";
+include "config/config.php";
 
 
 if (isset($_SESSION['user_id']) && isset($_SESSION['mail'])){
-  $pdo2 = new PDO("mysql:host=$sname;dbname=$db_name", $unmae, $password);
+  $pdo2 = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
 
   // Prepare the SQL statement to check if the user has a room
   $sql5 = "SELECT COUNT(*) as room_count FROM room WHERE user_id = :userId";
