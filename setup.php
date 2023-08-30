@@ -141,6 +141,22 @@ function form_install_4() {
 function form_install_5() {
     echo "<h1> Instalator :: krok: 5 </h1>
           <form method='POST' action='?step=6'>
+            <label for='appname'> Nazwa serwisu </label>
+            <input type='text' id='appname' name='appname'>
+            <label for='address'> Adres serwisu </label>
+            <input type='text' id='address' name='address'>
+            <label for='date'> Data powstania </label>
+            <input type='text' id='date' name='date'>
+            <label for='version'> Wersja </label>
+            <input type='text' id='version' name='version'>
+            <label for='company'> Nazwa firmy </label>
+            <input type='text' id='company' name='company'>
+            <label for='street'> Ulica </label>
+            <input type='text' id='street' name='street'>
+            <label for='city'> Miasto, kod </label>
+            <input type='text' id='city' name='city'>
+            <label for='phone_number'> Telefon </label>
+            <input type='text' id='phone_number' name='phone_number'>
             <p><b> Konto administratora </b></p>
             <label for='admin_login'> Login administratora </label>
             <input type='text' id='admin_login' name='admin_login'>
