@@ -31,7 +31,7 @@ CREATE TABLE `budget` (
   `budget_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `value` float NOT NULL,
-  `date` date DEFAULT NULL,
+  `date` varchar(50) DEFAULT NULL,
   `room_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -95,7 +95,7 @@ CREATE TABLE `task` (
   `isdone` tinyint(1) DEFAULT 0,
   `note` varchar(200) DEFAULT NULL,
   `priority` tinyint(5) DEFAULT NULL,
-  `deadline` datetime DEFAULT NULL,
+  `deadline` varchar(50) DEFAULT NULL,
   `user_id` int(11) NOT NULL,
   `room_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

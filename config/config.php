@@ -10,12 +10,12 @@
         ?>
 <?php# konfiguracja aplikacji
 
-        $base_url="asdasd";
-        $nazwa_aplikacji="asda";
-        $data_powstania="asdas";
-        $wersja="dasd";
+        $base_url="asd";
+        $nazwa_aplikacji="asd";
+        $data_powstania="asd";
+        $wersja="asd";
         $brand="asd";
-        $adres1="sdasd";
-        $adres2="asdas";
+        $adres1="asd";
+        $adres2="asd";
         $phone="asd";
         ?>
