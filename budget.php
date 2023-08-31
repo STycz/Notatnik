@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     
     // Redirect to the same page after updating the budget
-    header("Location: budget_php.php");
+    header("Location: budget.php");
     exit();
 }
 }
@@ -280,6 +280,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Remove the selected row from the table
         selectedRow.remove();
+        window.location.reload();
       }
     };
     xhr.send("delete_budget=" + encodeURIComponent(budgetId));

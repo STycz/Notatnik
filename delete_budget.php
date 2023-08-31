@@ -11,8 +11,5 @@ if (isset($_POST['delete_budget'])) {
   $statement = $pdo->prepare($sql);
   $statement->bindParam(':budgetId', $budgetId);
   $statement->execute();
-
-  // Send a response back to the client
-  echo "Budget deleted successfully";
 }
 ?>

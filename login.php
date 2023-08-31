@@ -22,13 +22,15 @@ if (isset($_POST['uname']) && isset($_POST['password'])){
     }else{
         
         $pass=md5($pass);
-        
+        echo $uname;
+        echo $pass;
         $sql = "SELECT * FROM user WHERE mail='$uname' AND password='$pass'";
 
         $result = mysqli_query($link, $sql);
 
         if (mysqli_num_rows($result) === 1){
             $row = mysqli_fetch_assoc($result);
+            echo $row;
             if($row['mail'] === $uname && $row['password'] === $pass){
                 $_SESSION['mail'] = $row['mail'];
                 $_SESSION['username'] = $row['username'];
