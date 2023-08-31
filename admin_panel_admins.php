@@ -67,12 +67,6 @@ $admins = $statement->fetchAll(PDO::FETCH_ASSOC);
               <span class="line"></span>
             </div>
             <li class="item">
-              <a href="#" class="link flex">
-                <i class="bx bx-cog"></i>
-                <span>Ustawienia</span>
-              </a>
-            </li>
-            <li class="item">
               <a href="logout.php" class="link flex">
                 <i class="bx bx-log-out"></i>
                 <span>Wyloguj</span>
